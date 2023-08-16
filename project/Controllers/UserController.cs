@@ -9,6 +9,7 @@ namespace project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [Authorize]
     public class UserController : ControllerBase
     {
         private readonly IUserRepository _userRepository;
@@ -18,7 +19,7 @@ namespace project.Controllers
             _userRepository = userRepository;
         }
 
-        [HttpGet, Authorize]
+        [HttpGet]
         public async Task<ActionResult> GetUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();

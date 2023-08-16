@@ -67,19 +67,19 @@ namespace project.Controllers
         private string CreateToken(User user)
         {
             List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Role, "User"),
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my top secretdhhdhdhdhheehchecf,;mnklbcvmnlkcmcvklnmcvknmcvknmcvknmcvlncvmknlcvnk"));
+            var key = new SymmetricSecurityKey(
+                Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
                 claims: claims,
-                expires: DateTime.Now.AddDays(1),
+                expires: DateTime.Now.AddHours(7),
                 signingCredentials: creds,
-                issuer:"asd"
+                issuer: "http://localhost:5069/"
             );
 
             var jwt = new JwtSecurityTokenHandler().WriteToken(token);

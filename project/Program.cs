@@ -1,11 +1,9 @@
 using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using project.Data;
-using project.Entity;
 using project.repository;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -69,16 +67,24 @@ builder.Services.AddAuthentication(options =>
 {
     options.TokenValidationParameters = new TokenValidationParameters
     {
-        ValidateIssuerSigningKey = true,
-        ValidateAudience = false,
         ValidateIssuer = true,
+        ValidateAudience = false,
         ValidateLifetime = true,
-        ValidIssuer = "asd",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my top secretdhhdhdhdhheehchecf,;mnklbcvmnlkcmcvklnmcvknmcvknmcvknmcvlncvmknlcvnk "))
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "http://localhost:5069/",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"))
     };
 });
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
