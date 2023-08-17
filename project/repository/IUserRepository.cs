@@ -11,7 +11,8 @@ namespace project.repository
         Task AddUserAsync(User user);
         Task UpdateUserAsync(UserDTO userDto);
         Task DeleteUserAsync(int id);
-        Task<List<CourseDTO>> GetUserCourses(int id);
-        Task AddCourseToUser(int userId,int courseId);
+        Task<List<CourseDTO>> GetUserCourses();
+        Task AddCourseToUser(int courseId);
+        string GetMyId();
     }
 }

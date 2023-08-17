@@ -56,14 +56,14 @@ namespace project.Controllers
         [HttpPut("{userId}/{courseId}")]
         public async Task<ActionResult> AddCourse(int userId, int courseId)
         {
-            await _userRepository.AddCourseToUser(userId, courseId);
+            await _userRepository.AddCourseToUser(courseId);
             return Ok();
         }
 
         [HttpGet("courses/{userId}")]
         public async Task<ActionResult> GetUserCourses(int userId)
         {
-            var userCourses = await _userRepository.GetUserCourses(userId);
+            var userCourses = await _userRepository.GetUserCourses();
             return Ok(userCourses);
         }
     }

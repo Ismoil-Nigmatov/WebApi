@@ -1,4 +1,5 @@
-﻿using JFA.DependencyInjection;
+﻿
+using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using project.Data;
 using project.Dto;
@@ -28,48 +29,35 @@ namespace project.repository
                     EducationId = e.Education.Id
                 })
                 .ToListAsync();
-    public async Task<List<FeedbackDTO>> GetAllFeedbackAsync()
-    {
-        var feedbackDtos = await _context.Feedback
-            .Include(e => e.User)
-            .Include(e => e.Education)
-            .Select(e => new FeedbackDTO()
-            {
-                Id = e.Id,
-                Description = e.Description,
-                EducationId = e.Education.Id,
-                UserId = e.User.Id
-            })
-            .ToListAsync();
 
             return feedbackDtos;
         }
 
-    public async Task<FeedbackDTO> GetFeedbackByIdAsync(int id)
-    {
-        var firstOrDefaultAsync = await _context.Feedback
-            .Include(e => e.User)
-            .Include(e => e.Education)
-            .FirstOrDefaultAsync(e => e.Id == id) ?? throw new BadHttpRequestException("Not Found");
-
-        FeedbackDTO feedbackDto = new FeedbackDTO();
-        feedbackDto.Id = id;
-        feedbackDto.Description = firstOrDefaultAsync.Description;
-        feedbackDto.UserId = firstOrDefaultAsync.User.Id;
-        feedbackDto.EducationId = firstOrDefaultAsync.Education.Id;
-
+        public async Task<FeedbackDTO> GetFeedbackByIdAsync(int id)
+        { 
+            var firstOrDefaultAsync = await _context.Feedback
+                .Include(e => e.User)
+                .Include(e => e.Education)
+                .FirstOrDefaultAsync(e => e.Id == id) ?? throw new BadHttpRequestException("Not Found");
+            FeedbackDTO feedbackDto = new FeedbackDTO(); 
+            feedbackDto.Id = id; 
+            feedbackDto.Description = firstOrDefaultAsync.Description; 
+            feedbackDto.UserId = firstOrDefaultAsync.User.Id; 
+            feedbackDto.EducationId = firstOrDefaultAsync.Education.Id;
             return feedbackDto;
         }
 
-    public async Task AddFeedbackAsync(FeedbackDTO feedbackDto)
-    {
-        Feedback feedback = new Feedback();
-        feedback.Description = feedbackDto.Description;
-        feedback.Education = await _context.Education.FindAsync(feedbackDto.EducationId);
-        feedback.User = await _context.User.FindAsync(feedbackDto.UserId);
-        _context.Feedback.Add(feedback);
-        await _context.SaveChangesAsync();
-    }
+        public async Task AddFeedbackAsync(ClaimsPrincipal principal ,FeedbackDTO feedbackDto)
+        {
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;
+
+            Feedback feedback = new Feedback();
+            feedback.Description = feedbackDto.Description;
+            feedback.Education = await _context.Education.FindAsync(feedbackDto.EducationId);
+            feedback.User = await _context.User.FindAsync(Convert.ToInt32(userId));
+            _context.Feedback.Add(feedback);
+            await _context.SaveChangesAsync();
+        }
 
         public async Task DeleteFeedbackAsync(int id)
         {

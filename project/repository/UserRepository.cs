@@ -2,6 +2,7 @@
 using project.Data;
 using project.Dto;
 using project.Entity;
+using System.Security.Claims;
 using Task = System.Threading.Tasks.Task;
 
 namespace project.repository
@@ -9,10 +10,11 @@ namespace project.repository
     public class UserRepository : IUserRepository
     {
         private readonly AppDbContext _context;
-
-        public UserRepository(AppDbContext context)
+        private readonly IHttpContextAccessor _httpContextAccessor;
+        public UserRepository(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
             _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<User>> GetAllUsersAsync()
@@ -33,7 +35,8 @@ namespace project.repository
 
         public async Task UpdateUserAsync(UserDTO userDto)
         {
-            var firstOrDefaultAsync = await _context.User.FirstOrDefaultAsync(u => u.Id == userDto.Id);
+            var myId = GetMyId();
+            var firstOrDefaultAsync = await _context.User.FirstOrDefaultAsync(u => u.Id == Convert.ToInt32(myId));
 
             if (firstOrDefaultAsync != null)
             {
@@ -55,11 +58,12 @@ namespace project.repository
             }
         }
 
-        public async Task<List<CourseDTO>> GetUserCourses(int id)
+        public async Task<List<CourseDTO>> GetUserCourses()
         {
+            var myId = GetMyId();
             var user = await _context.User
                 .Include(e => e.Courses)
-                .FirstOrDefaultAsync(e => e.Id == id);
+                .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(myId));
 
             List<CourseDTO> courseDTOs = user.Courses.Select(course => new CourseDTO
             {
@@ -72,11 +76,12 @@ namespace project.repository
             return courseDTOs;
         }
 
-        public async Task AddCourseToUser( int userId , int courseId)
+        public async Task AddCourseToUser(int courseId)
         {
+            var myId = GetMyId();
             var findAsync = await _context.Course.FindAsync(courseId);
 
-            var user = await _context.User.Include(e => e.Courses).FirstOrDefaultAsync(e => e.Id == userId);
+            var user = await _context.User.Include(e => e.Courses).FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(myId));
 
             user.Courses.Add(findAsync);
 
@@ -84,5 +89,14 @@ namespace project.repository
             await _context.SaveChangesAsync();
         }
 
+        public string GetMyId()
+        {
+            var result = string.Empty;
+            if (_httpContextAccessor.HttpContext is not null)
+            {
+                result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
+            }
+            return result;
+        }
     }
 }

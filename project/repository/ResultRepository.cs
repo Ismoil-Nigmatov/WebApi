@@ -1,4 +1,4 @@
-﻿using JFA.DependencyInjection;
+﻿using System.Security.Claims;
 using Microsoft.EntityFrameworkCore;
 using project.Data;
 using project.Dto;
@@ -7,10 +7,7 @@ using Task = System.Threading.Tasks.Task;
 
 namespace project.repository
 {
-    public class ResultRepository : IResultRepository
-    {
-        private readonly AppDbContext _context;
-namespace project.repository;
+
 public class ResultRepository : IResultRepository
 {
     private readonly AppDbContext _context;
@@ -50,15 +47,16 @@ public class ResultRepository : IResultRepository
             return resultDto;
         }
 
-    public async Task AddResultAsync(ResultDTO resultDto)
-    {
+        public async Task AddResultAsync(ClaimsPrincipal principal ,ResultDTO resultDto)
+        {
+            var userId = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         Result result = new Result();
         result.Url = resultDto.Url;
         result.Education = await _context.Education.FindAsync(resultDto.EducationId);
-        result.User = await _context.User.FindAsync(resultDto.UserId);
+        result.User = await _context.User.FindAsync(Convert.ToInt32(userId));
         _context.Result.Add(result);
         await _context.SaveChangesAsync();
-    }
+        }
 
         public async Task DeleteResultAsync(int id)
         {
