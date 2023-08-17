@@ -53,8 +53,8 @@ namespace project.repository
 
             Feedback feedback = new Feedback();
             feedback.Description = feedbackDto.Description;
-            feedback.Education = await _context.Education.FindAsync(feedbackDto.EducationId);
-            feedback.User = await _context.User.FindAsync(Convert.ToInt32(userId));
+            feedback.Education = await _context.Education.FindAsync(feedbackDto.EducationId) ?? throw new BadHttpRequestException("Education not found");
+            feedback.User = await _context.User.FindAsync(Convert.ToInt32(userId)) ?? throw new BadHttpRequestException("User not found");
             _context.Feedback.Add(feedback);
             await _context.SaveChangesAsync();
         }

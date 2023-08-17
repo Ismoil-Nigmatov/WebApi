@@ -8,27 +8,27 @@ using Task = System.Threading.Tasks.Task;
 namespace project.repository
 {
 
-public class ResultRepository : IResultRepository
-{
-    private readonly AppDbContext _context;
+    public class ResultRepository : IResultRepository
+    {
+        private readonly AppDbContext _context;
 
         public ResultRepository(AppDbContext context) => _context = context;
 
-    public async Task<List<ResultDTO>> GetAllResultAsync()
-    {
-        var resultDtos = await _context.Result
-            .Include(e => e.User)
-            .Include(e => e.Education)
-            .Select(e => new ResultDTO()
-            {
-                Id = e.Id,
-                Url = e.Url,
-                UserId = e.User.Id,
-                EducationId = e.Education.Id
-            })
-            .ToListAsync();
+        public async Task<List<ResultDTO>> GetAllResultAsync()
+        {
+            var resultDtos = await _context.Result
+                .Include(e => e.User)
+                .Include(e => e.Education)
+                .Select(e => new ResultDTO()
+                {
+                    Id = e.Id,
+                    Url = e.Url,
+                    UserId = e.User.Id,
+                    EducationId = e.Education.Id
+                })
+                .ToListAsync();
 
-            return resultDtos;
+                return resultDtos;
         }
 
         public async Task<ResultDTO> GetResultByIdAsync(int id)
@@ -52,8 +52,8 @@ public class ResultRepository : IResultRepository
             var userId = principal.FindFirst(ClaimTypes.NameIdentifier)!.Value;
         Result result = new Result();
         result.Url = resultDto.Url;
-        result.Education = await _context.Education.FindAsync(resultDto.EducationId);
-        result.User = await _context.User.FindAsync(Convert.ToInt32(userId));
+        result.Education = await _context.Education.FindAsync(resultDto.EducationId) ?? throw new BadHttpRequestException("Education not found");
+        result.User = await _context.User.FindAsync(Convert.ToInt32(userId)) ?? throw new BadHttpRequestException("User not found");
         _context.Result.Add(result);
         await _context.SaveChangesAsync();
         }

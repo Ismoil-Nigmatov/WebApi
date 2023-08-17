@@ -32,7 +32,7 @@ namespace project.repository
         {
             var firstOrDefaultAsync = await _context.TaskAnswers
                 .Include(e => e.Task)
-                .FirstOrDefaultAsync(e => e.Id == id) ?? throw new BadHttpRequestException("Not Found");
+                .FirstOrDefaultAsync(e => e.Id == id) ?? throw new BadHttpRequestException("TaskAnswer not found");
             TaskAnswerDTO taskAnswerDto = new TaskAnswerDTO();
             taskAnswerDto.Id = firstOrDefaultAsync.Id;
             taskAnswerDto.Answer = firstOrDefaultAsync.Answer;
@@ -47,7 +47,7 @@ namespace project.repository
             TaskAnswer taskAnswer = new TaskAnswer();
             taskAnswer.Answer = taskAnswerDto.Answer;
             taskAnswer.fileUrl = taskAnswerDto.fileUrl;
-            taskAnswer.Task = await _context.Task.FindAsync(taskAnswerDto.TaskId);
+            taskAnswer.Task = await _context.Task.FindAsync(taskAnswerDto.TaskId) ?? throw new BadHttpRequestException("Task not found");
 
             _context.TaskAnswers.Add(taskAnswer);
             await _context.SaveChangesAsync();
@@ -58,7 +58,7 @@ namespace project.repository
             var findAsync = await _context.TaskAnswers.FindAsync(taskAnswerDto.Id);
             findAsync.fileUrl = taskAnswerDto.fileUrl;
             findAsync.Answer = taskAnswerDto.Answer;
-            findAsync.Task = await _context.Task.FindAsync(taskAnswerDto.TaskId);
+            findAsync.Task = await _context.Task.FindAsync(taskAnswerDto.TaskId) ?? throw new BadHttpRequestException("Task not found");
 
             _context.Entry(findAsync).State = EntityState.Modified;
             await _context.SaveChangesAsync();

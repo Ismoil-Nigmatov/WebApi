@@ -25,7 +25,7 @@ namespace project.repository
 
         public async Task<Teacher> GetTeacherByIdAsync(int id)
         {
-            return await _context.Teacher.FirstOrDefaultAsync(teacher => teacher.Id == id) ?? throw new BadHttpRequestException("Not Found");
+            return await _context.Teacher.FirstOrDefaultAsync(teacher => teacher.Id == id) ?? throw new BadHttpRequestException("Teacher not found");
         }
 
         public async Task AddTeacherAsync(TeacherDTO teacherDto)

@@ -51,7 +51,7 @@ namespace project.repository
             lesson.Title = lessonDto.Title;
             lesson.Information = lessonDto.Information;
             lesson.VideoUrl = lessonDto.VideoUrl;
-            lesson.Course = await _context.Course.FindAsync(lessonDto.CourseId);
+            lesson.Course = await _context.Course.FindAsync(lessonDto.CourseId) ?? throw new BadHttpRequestException("Course not found");
             _context.Lesson.Add(lesson);
             await _context.SaveChangesAsync();
         }
@@ -64,7 +64,7 @@ namespace project.repository
                 findAsync.Title = lessonDto.Title;
                 findAsync.Information = lessonDto.Information;
                 findAsync.VideoUrl = lessonDto.VideoUrl;
-                findAsync.Course = await _context.Course.FindAsync(lessonDto.CourseId);
+                findAsync.Course = await _context.Course.FindAsync(lessonDto.CourseId) ?? throw new BadHttpRequestException("Course not found");
                 _context.Entry(findAsync).State = EntityState.Modified;
                 await _context.SaveChangesAsync();
             }

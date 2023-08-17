@@ -50,7 +50,7 @@ namespace project.repository
             Homework homework = new Homework();
             homework.Description = homeworkDto.Description;
             homework.ImageUrl = homeworkDto.ImageUrl;
-            homework.Task = await _context.Task.FindAsync(homeworkDto.TaskId);
+            homework.Task = await _context.Task.FindAsync(homeworkDto.TaskId) ?? throw new BadHttpRequestException("Task not found");
 
             _context.Homework.Add(homework);
             await _context.SaveChangesAsync();
@@ -58,10 +58,10 @@ namespace project.repository
 
         public async Task UpdateHomeworkAsync(HomeworkDTO homeworkDto)
         {
-            var findAsync = await _context.Homework.FindAsync(homeworkDto.Id);
+            var findAsync = await _context.Homework.FindAsync(homeworkDto.Id) ?? throw new BadHttpRequestException("Homework not found");
             findAsync.Description = homeworkDto.Description;
             findAsync.ImageUrl = homeworkDto.ImageUrl;
-            findAsync.Task = await _context.Task.FindAsync(homeworkDto.TaskId);
+            findAsync.Task = await _context.Task.FindAsync(homeworkDto.TaskId) ?? throw new BadHttpRequestException("Task not found");
 
             _context.Entry(findAsync).State = EntityState.Modified;
             await _context.SaveChangesAsync();

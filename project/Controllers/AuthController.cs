@@ -10,6 +10,7 @@ using project.Data;
 using project.Dto;
 using project.Entity;
 using project.repository;
+using project.Service;
 
 namespace project.Controllers
 {
@@ -20,12 +21,14 @@ namespace project.Controllers
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
         private readonly AppDbContext _context;
+        private readonly JWTService _jwtService;
 
-        public AuthController(IConfiguration configuration, IUserRepository userRepository,AppDbContext context)
+        public AuthController(IConfiguration configuration, IUserRepository userRepository,AppDbContext context, JWTService jwtService)
         {
             _configuration = configuration;
             _userRepository = userRepository;
             _context = context;
+            _jwtService = jwtService;
         }
 
         [HttpGet, Authorize]
@@ -63,7 +66,7 @@ namespace project.Controllers
             var verify = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
             if (verify)
             {
-                string token = CreateToken(user);
+                string token = _jwtService.CreateToken(user);
                 return Ok(token);
             }
             else
@@ -72,26 +75,5 @@ namespace project.Controllers
             }
         }
 
-        private string CreateToken(User user)
-        {
-            List<Claim> claims = new List<Claim> {
-                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
-            };
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"));
-
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                claims: claims,
-                expires: DateTime.Now.AddHours(7),
-                signingCredentials: creds,
-                issuer: "http://localhost:5069/"
-            );
-
-            var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-            return jwt;
-        }
     }
 }

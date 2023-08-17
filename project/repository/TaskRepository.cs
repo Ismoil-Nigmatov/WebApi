@@ -34,7 +34,7 @@ namespace project.repository
         {
             var firstOrDefaultAsync = await _context.Task
                 .Include(e => e.Lesson)
-                .FirstOrDefaultAsync(e => e.Id == id) ?? throw new BadHttpRequestException("Not Found");
+                .FirstOrDefaultAsync(e => e.Id == id) ?? throw new BadHttpRequestException("Task not found");
 
             TaskDTO taskDto = new TaskDTO();
             taskDto.Id = id;
@@ -52,7 +52,7 @@ namespace project.repository
             Entity.Task task = new Entity.Task();
             task.Title = taskDto.Title;
             task.Description = taskDto.Description;
-            task.Lesson = await _context.Lesson.FindAsync(taskDto.LessonId);
+            task.Lesson = await _context.Lesson.FindAsync(taskDto.LessonId) ?? throw new BadHttpRequestException("Lesson not found");
             task.Process = EProcess.NOTSTARTED;
             _context.Task.Add(task);
             await _context.SaveChangesAsync();

@@ -5,6 +5,7 @@ using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using project.Data;
 using project.repository;
+using project.Service;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -54,6 +55,7 @@ builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
 builder.Services.AddScoped<IHomeworkRepository, HomeworkRepository>();
 builder.Services.AddScoped<ITaskAnswerRepository, TaskAnswerRepository>();
+builder.Services.AddScoped<JWTService>();
 
 builder.Services.AddDbContext<AppDbContext>(options =>
 {

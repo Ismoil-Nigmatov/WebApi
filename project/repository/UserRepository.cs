@@ -24,7 +24,7 @@ namespace project.repository
 
         public async Task<User> GetUserByIdAsync(int id)
         {
-            return await _context.User.FirstOrDefaultAsync(u => u.Id == id);
+            return await _context.User.FirstOrDefaultAsync(u => u.Id == id) ?? throw new BadHttpRequestException("User not found");
         }
 
         public async Task AddUserAsync(User user)
@@ -63,9 +63,9 @@ namespace project.repository
             var myId = GetMyId();
             var user = await _context.User
                 .Include(e => e.Courses)
-                .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(myId));
+                .FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(myId))   ?? throw new BadHttpRequestException("User Not found");
 
-            List<CourseDTO> courseDTOs = user.Courses.Select(course => new CourseDTO
+            List<CourseDTO> courseDtos = user.Courses.Select(course => new CourseDTO
             {
                 Id = course.Id,
                 ImageUrl = course.ImageUrl,
@@ -73,15 +73,15 @@ namespace project.repository
                 Price = course.Price
             }).ToList();
 
-            return courseDTOs;
+            return courseDtos;
         }
 
         public async Task AddCourseToUser(int courseId)
         {
             var myId = GetMyId();
-            var findAsync = await _context.Course.FindAsync(courseId);
+            var findAsync = await _context.Course.FindAsync(courseId)?? throw new BadHttpRequestException("Course not found");
 
-            var user = await _context.User.Include(e => e.Courses).FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(myId));
+            var user = await _context.User.Include(e => e.Courses).FirstOrDefaultAsync(e => e.Id == Convert.ToInt32(myId)) ?? throw new BadHttpRequestException("User not found");
 
             user.Courses.Add(findAsync);
 
@@ -96,7 +96,7 @@ namespace project.repository
             {
                 result = _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
             }
-            return result;
+            return result ?? throw new BadHttpRequestException("User Id not found");
         }
     }
 }
