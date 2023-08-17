@@ -70,21 +70,12 @@ builder.Services.AddAuthentication(options =>
         ValidateIssuer = true,
         ValidateAudience = false,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
         ValidIssuer = "http://localhost:5069/",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"))
     };
 });
 
 var app = builder.Build();
-
-
-using (var scope = app.Services.CreateScope())
-{
-    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
-    db.Database.Migrate();
-}
-
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

@@ -70,8 +70,7 @@ namespace project.Controllers
                 new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
             };
 
-            var key = new SymmetricSecurityKey(
-                Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"));
 
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
