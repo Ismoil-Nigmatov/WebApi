@@ -1,4 +1,5 @@
-﻿using project.Dto;
+﻿using System.Security.Claims;
+using project.Dto;
 using project.Entity;
 using Task = System.Threading.Tasks.Task;
 
@@ -8,7 +9,7 @@ namespace project.repository
     {
         Task<List<FeedbackDTO>> GetAllFeedbackAsync();
         Task<FeedbackDTO> GetFeedbackByIdAsync(int id);
-        Task AddFeedbackAsync(FeedbackDTO feedbackDto);
+        Task AddFeedbackAsync(ClaimsPrincipal claims , FeedbackDTO feedbackDto);
         Task DeleteFeedbackAsync(int id);
     }
 }

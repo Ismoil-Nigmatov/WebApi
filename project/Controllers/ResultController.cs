@@ -30,7 +30,7 @@ namespace project.Controllers
         [HttpPost]
         public async Task<ActionResult> AddResult(ResultDTO resultDto)
         {
-            await _resultRepository.AddResultAsync(resultDto);
+            await _resultRepository.AddResultAsync(User , resultDto);
             return Ok();
         }
 

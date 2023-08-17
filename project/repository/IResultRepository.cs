@@ -1,4 +1,5 @@
-﻿using project.Dto;
+﻿using System.Security.Claims;
+using project.Dto;
 
 namespace project.repository
 {
@@ -6,7 +7,7 @@ namespace project.repository
     {
         Task<List<ResultDTO>> GetAllResultAsync();
         Task<ResultDTO> GetResultByIdAsync(int id);
-        Task AddResultAsync(ResultDTO resultDto);
+        Task AddResultAsync(ClaimsPrincipal claims , ResultDTO resultDto);
         Task DeleteResultAsync(int id);
     }
 }

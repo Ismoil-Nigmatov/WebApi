@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using System.Security.Claims;
+using Microsoft.AspNetCore.Mvc;
 using project.Dto;
 using project.repository;
 
@@ -30,7 +31,7 @@ namespace project.Controllers
         [HttpPost]
         public async Task<ActionResult> AddFeedback(FeedbackDTO feedbackDto)
         {
-            await _feedbackRepository.AddFeedbackAsync(feedbackDto);
+            await _feedbackRepository.AddFeedbackAsync(User, feedbackDto);
             return Ok();
         }
 
