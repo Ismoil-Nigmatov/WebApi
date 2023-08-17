@@ -22,7 +22,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return Ok(users ?? new List<User>());
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
@@ -52,17 +52,17 @@ namespace project.Controllers
             return Ok();
         }
 
-        [HttpPut("{userId}/{courseId}")]
-        public async Task<ActionResult> AddCourse(int userId, int courseId)
+        [HttpPut("{courseId}")]
+        public async Task<ActionResult> AddCourse(int courseId)
         {
-            await _userRepository.AddCourseToUser(userId, courseId);
+            await _userRepository.AddCourseToUser(courseId);
             return Ok();
         }
 
-        [HttpGet("courses/{userId}")]
-        public async Task<ActionResult> GetUserCourses(int userId)
+        [HttpGet("courses")]
+        public async Task<ActionResult> GetUserCourses()
         {
-            var userCourses = await _userRepository.GetUserCourses(userId);
+            var userCourses = await _userRepository.GetUserCourses();
             return Ok(userCourses);
         }
     }

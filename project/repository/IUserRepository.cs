@@ -6,12 +6,13 @@ namespace project.repository
 {
     public interface IUserRepository
     {
-        Task<List<User>> GetAllUsersAsync();
-        Task<User> GetUserByIdAsync(int id);
+        Task<List<UserDTO>> GetAllUsersAsync();
+        Task<UserDTO> GetUserByIdAsync(int id);
         Task AddUserAsync(User user);
         Task UpdateUserAsync(UserDTO userDto);
         Task DeleteUserAsync(int id);
-        Task<List<CourseDTO>> GetUserCourses(int id);
-        Task AddCourseToUser(int userId,int courseId);
+        Task<List<CourseDTO>> GetUserCourses();
+        Task AddCourseToUser(int courseId); 
+        string GetMyId();
     }
 }

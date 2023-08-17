@@ -15,6 +15,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddHttpContextAccessor();
 builder.Services.AddSwaggerGen(options =>
 {
     options.SwaggerDoc("v1", new OpenApiInfo { Title = "Demo API", Version = "v1" });
@@ -43,19 +44,6 @@ builder.Services.AddSwaggerGen(options =>
     });
 
 });
-builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ITestRepository, TestRepository>();
-builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();
-builder.Services.AddScoped<IEducationRepository, EducationRepository>();
-builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
-builder.Services.AddScoped<IResultRepository, ResultRepository>();
-builder.Services.AddScoped<ILessonRepository, LessonRepository>();
-builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-builder.Services.AddScoped<IHomeworkRepository, HomeworkRepository>();
-builder.Services.AddScoped<ITaskAnswerRepository, TaskAnswerRepository>();
-
 builder.Services.AddDbContext<AppDbContext>(options =>
 {
     options.UseNpgsql(builder.Configuration.GetConnectionString("databaseConnection"));
@@ -73,12 +61,20 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateIssuer = true,
         ValidateLifetime = true,
-        ValidIssuer = "asd",
-        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("my top secretdhhdhdhdhheehchecf,;mnklbcvmnlkcmcvklnmcvknmcvknmcvknmcvlncvmknlcvnk "))
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = "http://localhost:5069/",
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"))
     };
 });
 
 var app = builder.Build();
+
+
+using (var scope = app.Services.CreateScope())
+{
+    var db = scope.ServiceProvider.GetRequiredService<AppDbContext>();
+    db.Database.Migrate();
+}
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())

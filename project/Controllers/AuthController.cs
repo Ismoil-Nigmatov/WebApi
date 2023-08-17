@@ -1,14 +1,15 @@
 ﻿
-using System.IdentityModel.Tokens.Jwt;
+ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using project.Data;
 using project.Dto;
 using project.Entity;
-using project.repository;
+using project.repository; 
 
 namespace project.Controllers
 {
@@ -25,6 +26,12 @@ namespace project.Controllers
             _configuration = configuration;
             _userRepository = userRepository;
             _context = context;
+        }
+
+        [HttpGet, Authorize]
+        public ActionResult<string> GetMyId()
+        {
+            return Ok(_userRepository.GetMyId());
         }
 
         [HttpPost("register")]
