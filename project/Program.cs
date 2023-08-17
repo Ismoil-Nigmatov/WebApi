@@ -61,7 +61,6 @@ builder.Services.AddAuthentication(options =>
         ValidateAudience = false,
         ValidateIssuer = true,
         ValidateLifetime = true,
-        ValidateIssuerSigningKey = true,
         ValidIssuer = "http://localhost:5069/",
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("asfsafsasafjsafjksafksafsafsafsafasfasfafasfsafasfsafsafassaf"))
     };
