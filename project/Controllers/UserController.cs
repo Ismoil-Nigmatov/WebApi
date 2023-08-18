@@ -23,19 +23,13 @@ namespace project.Controllers
         public async Task<ActionResult> GetUsers()
         {
             var users = await _userRepository.GetAllUsersAsync();
-            return Ok(users ?? new List<User>());
+            return Ok(users);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetUserById(int id)
         {
             var user = await _userRepository.GetUserByIdAsync(id);
-
-            if (user == null)
-            {
-                return NotFound();
-            }
-
             return Ok(user);
         }
 

@@ -20,14 +20,12 @@ namespace project.Controllers
     {
         private readonly IConfiguration _configuration;
         private readonly IUserRepository _userRepository;
-        private readonly AppDbContext _context;
         private readonly JWTService _jwtService;
 
-        public AuthController(IConfiguration configuration, IUserRepository userRepository,AppDbContext context, JWTService jwtService)
+        public AuthController(IConfiguration configuration, IUserRepository userRepository,JWTService jwtService)
         {
             _configuration = configuration;
             _userRepository = userRepository;
-            _context = context;
             _jwtService = jwtService;
         }
 
@@ -41,37 +39,19 @@ namespace project.Controllers
         [HttpPost("register")]
         public ActionResult<User> Register(UserDTO request)
         {
-            string passwordHash
-                = BCrypt.Net.BCrypt.HashPassword(request.Password);
-
-            User user = new User();
-            user.FullName = request.FullName;
-            user.Password = passwordHash;
-            user.Email = request.Email;
-
-            _userRepository.AddUserAsync(user);
-            return Ok(user);
+            return Ok(_jwtService.Registration(request));
         }
 
         [HttpPost("login")]
         public async Task<IActionResult> Login(LoginDTO request)
         {
-            var user = await _context.User.FirstOrDefaultAsync(e => e.Email == request.Email);
-
-            if (user == null)
+            try
             {
-                return BadRequest("User not found.");
+                return Ok(_jwtService.Login(request));
             }
-
-            var verify = BCrypt.Net.BCrypt.Verify(request.Password, user.Password);
-            if (verify)
+            catch (Exception e)
             {
-                string token = _jwtService.CreateToken(user);
-                return Ok(token);
-            }
-            else
-            {
-                return BadRequest("Wrong password");
+                return BadRequest("Incorrect User or Password");
             }
         }
 

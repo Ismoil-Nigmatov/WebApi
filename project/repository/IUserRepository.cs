@@ -13,6 +13,8 @@ namespace project.repository
         Task DeleteUserAsync(int id);
         Task<List<CourseDTO>> GetUserCourses();
         Task AddCourseToUser(int courseId);
+
+        Task<User?> GetUserByEmail(string email);
         string GetMyId();
     }
 }

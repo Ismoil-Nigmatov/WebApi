@@ -89,6 +89,11 @@ namespace project.repository
             await _context.SaveChangesAsync();
         }
 
+        public async Task<User?> GetUserByEmail(string email)
+        {
+           return await _context.User.FirstOrDefaultAsync(e => e.Email == email) ?? throw new BadHttpRequestException("User not found");
+        }
+
         public string GetMyId()
         {
             var result = string.Empty;

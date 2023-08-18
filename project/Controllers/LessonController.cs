@@ -17,19 +17,13 @@ namespace project.Controllers
         public async Task<ActionResult> GetLessons()
         {
             var lessons = await _lessonRepository.GetAllLessonAsync();
-            return Ok(lessons ?? new List<LessonDTO>());
+            return Ok(lessons);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetLessonById(int id)
         {
             var lesson = await _lessonRepository.GetLessonByIdAsync(id);
-
-            if (lesson == null)
-            {
-                return NotFound();
-            }
-
             return Ok(lesson);
         }
 

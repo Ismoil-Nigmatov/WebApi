@@ -17,7 +17,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetEducations()
         {
             var educations = await _educationRepository.GetAllEducationAsync();
-            return Ok(educations ?? new List<EducationDTO>());
+            return Ok(educations);
         }
 
         [HttpGet("{id}")]

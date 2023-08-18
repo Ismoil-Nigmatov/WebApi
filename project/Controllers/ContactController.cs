@@ -21,7 +21,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetContacts()
         {
             var contacts = await _contactRepository.GetAllContactAsync();
-            return Ok(contacts ?? new List<Contact>());
+            return Ok(contacts);
         }
 
         [HttpGet("{id}")]

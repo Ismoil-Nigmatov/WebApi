@@ -21,18 +21,13 @@ namespace project.Controllers
         public async Task<ActionResult> GetTeachers()
         {
             var teachers = await _teacherRepository.GetAllTeacherAsync();
-            return Ok(teachers ?? new List<Teacher>());
+            return Ok(teachers);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetTeacherById(int id)
         {
             var teacher= await _teacherRepository.GetTeacherByIdAsync(id);
-
-            if (teacher == null)
-            {
-                return NotFound();
-            }
 
             return Ok(teacher);
         }

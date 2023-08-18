@@ -16,7 +16,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetResults()
         {
             var results = await _resultRepository.GetAllResultAsync();
-            return Ok(results ?? new List<ResultDTO>());
+            return Ok(results);
         }
 
         [HttpGet("{id}")]

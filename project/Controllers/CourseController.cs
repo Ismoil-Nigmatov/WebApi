@@ -22,7 +22,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetCourses()
         {
             var courses = await _courseRepository.GetAllCourseAsync();
-            return Ok(courses ?? new List<Course>());
+            return Ok(courses);
         }
 
         [HttpGet("{id}")]

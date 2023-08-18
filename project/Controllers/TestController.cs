@@ -21,19 +21,13 @@ namespace project.Controllers
         public async Task<ActionResult> GetTests()
         {
             var tests = await _testRepository.GetAllTestAsync();
-            return Ok(tests ?? new List<Test>());
+            return Ok(tests);
         }
 
         [HttpGet("{id}")]
         public async Task<ActionResult> GetTestById(int id)
         {
             var test = await _testRepository.GetTestByIdAsync(id);
-
-            if (test == null)
-            {
-                return NotFound();
-            }
-
             return Ok(test);
         }
 

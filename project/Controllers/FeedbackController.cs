@@ -17,7 +17,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetFeedbacks()
         {
             var feedbacks = await _feedbackRepository.GetAllFeedbackAsync();
-            return Ok(feedbacks ?? new List<FeedbackDTO>());
+            return Ok(feedbacks);
         }
 
         [HttpGet("{id}")]

@@ -23,7 +23,7 @@ namespace project.Controllers
         public async Task<ActionResult> GetTasks()
         {
             var tasks = await _taskRepository.GetAllTaskAsync();
-            return Ok(tasks ?? new List<TaskDTO>());
+            return Ok(tasks);
         }
 
         [HttpGet("{id}")]
