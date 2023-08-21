@@ -1,6 +1,8 @@
-﻿namespace project.Dto
+﻿using project.Entity;
+
+namespace project.Dto
 {
-    public class HomeworkDTO
+    public class HomeworkDTO : IEntity
     {
         public int Id { get; set; }
 

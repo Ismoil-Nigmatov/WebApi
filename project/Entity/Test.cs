@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace project.Entity
 {
-    public class Test
+    public class Test : IEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; }
 
         public string Question { get; set; }

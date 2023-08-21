@@ -1,6 +1,6 @@
 ﻿namespace project.Entity
 {
-    public class Homework
+    public class Homework : IEntity
     {
         public int Id { get; set; }
 

@@ -44,16 +44,16 @@ builder.Services.AddSwaggerGen(options =>
 
 });
 builder.Services.AddScoped<IUserRepository, UserRepository>();
-builder.Services.AddScoped<ITestRepository, TestRepository>();
-builder.Services.AddScoped<ITeacherRepository, TeacherRepository>();
-builder.Services.AddScoped<IContactRepository, ContactRepository>();
-builder.Services.AddScoped<ICourseRepository, CourseRepository>();
+builder.Services.AddScoped<TestRepository>();
+builder.Services.AddScoped<TeacherRepository>();
+builder.Services.AddScoped<ContactRepository>();
+builder.Services.AddScoped<CourseRepository>();
 builder.Services.AddScoped<IEducationRepository, EducationRepository>();
 builder.Services.AddScoped<IFeedbackRepository, FeedbackRepository>();
 builder.Services.AddScoped<IResultRepository, ResultRepository>();
 builder.Services.AddScoped<ILessonRepository, LessonRepository>();
 builder.Services.AddScoped<ITaskRepository, TaskRepository>();
-builder.Services.AddScoped<IHomeworkRepository, HomeworkRepository>();
+builder.Services.AddScoped<IHomeworkRepository , HomeworkRepository>();
 builder.Services.AddScoped<ITaskAnswerRepository, TaskAnswerRepository>();
 builder.Services.AddScoped<JWTService>();
 

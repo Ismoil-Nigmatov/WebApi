@@ -3,10 +3,8 @@ using System.ComponentModel.DataAnnotations;
 
 namespace project.Entity
 {
-    public class Course
+    public class Course : IEntity
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int Id { get; set; } 
         public string ImageUrl { get; set; } 
         public string Description { get; set; } 
