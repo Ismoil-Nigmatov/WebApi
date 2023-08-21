@@ -1,11 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using project.Entity;
 using project.Generics;
+using project.Validators;
 
 namespace project.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
+    [ValidateModel]
     public abstract class AppDbController<TEntity, TRepository> : ControllerBase
         where TEntity : class, IEntity
         where TRepository : IGenericService<TEntity>

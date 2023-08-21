@@ -1,9 +1,13 @@
+using System.Reflection;
 using System.Text;
+using FluentValidation.AspNetCore;
+using FluentValidation;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using project.Data;
+using project.Middleware;
 using project.repository;
 using project.Service;
 
@@ -43,6 +47,12 @@ builder.Services.AddSwaggerGen(options =>
     });
 
 });
+
+builder.Services.AddFluentValidationAutoValidation(o =>
+{
+    o.DisableDataAnnotationsValidation = false;
+});
+builder.Services.AddValidatorsFromAssembly(Assembly.GetAssembly(typeof(Program)));
 builder.Services.AddScoped<IUserRepository, UserRepository>();
 builder.Services.AddScoped<TestRepository>();
 builder.Services.AddScoped<TeacherRepository>();
@@ -89,7 +99,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseErrorHandlerMiddleware();
 app.UseAuthentication();
 app.UseAuthorization();
 
